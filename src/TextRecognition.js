@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { saveAs } from 'file-saver';
 import Tesseract from "tesseract.js";
 const TextRecognition = ({ selectedImage }) => {
   const [recognizedText, setRecognizedText] = useState("");
