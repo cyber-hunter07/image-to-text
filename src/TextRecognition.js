@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import Tesseract from 'tesseract.js';
+import React, { useEffect, useState } from "react";
+import Tesseract from "tesseract.js";
 const TextRecognition = ({ selectedImage }) => {
-  const [recognizedText, setRecognizedText] = useState('');
+  const [recognizedText, setRecognizedText] = useState("");
   useEffect(() => {
     const recognizeText = async () => {
       if (selectedImage) {
@@ -11,10 +11,19 @@ const TextRecognition = ({ selectedImage }) => {
     };
     recognizeText();
   }, [selectedImage]);
+  const handleDownload = () => {
+    const file = new Blob([recognizedText], {
+      type: "text/plain;charset=utf-8",
+    });
+    saveAs(file, "recognizedText.txt");
+  };
   return (
     <div>
-      <h2>Recognized Text:</h2>
+      <h5>Recognized Text:</h5>
       <p>{recognizedText}</p>
+      <>
+        <button onClick={handleDownload}>Download</button>
+      </>
     </div>
   );
 };
