@@ -36,12 +36,12 @@ const TextRecognition = ({ selectedImage }) => {
   return (
     <div>
       <h5>Recognized Text:</h5>
-      <p>{recognizedText}</p>
+      <p style={{ color: "whitesmoke" }}>{recognizedText}</p>
       <>
         <button onClick={handleDownload}>Download</button>
       </>
       <>
-        <h5>Valid Document: {returnValue}</h5>
+        <h5 style={{ color: "whitesmoke" }}>{returnValue}</h5>
       </>
     </div>
   );

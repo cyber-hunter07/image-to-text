@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import TextRecognition from './TextRecognition';
+import React, { useState } from "react";
+import TextRecognition from "./TextRecognition";
+import "./App.css";
 const ImageUploader = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const handleImageUpload = (event) => {
@@ -7,12 +8,25 @@ const ImageUploader = () => {
     setSelectedImage(URL.createObjectURL(image));
   };
   return (
-    <>
-    <div>
-      <input type="file" accept="image/*" onChange={handleImageUpload} />
-      {selectedImage && <img src={selectedImage} alt="Selected" />}
+    <div style={{paddingTop:'8rem'}} class="grid-item">
+      <div>
+        <input type="file" accept="image/*" onChange={handleImageUpload} />
+      </div>
+      <div>
+        <>
+          {selectedImage && (
+            <img
+              style={{ width: "300px", paddingTop:"2rem" }}
+              src={selectedImage}
+              alt="Selected"
+            />
+          )}
+        </>
+      </div>
+      <>
+        <TextRecognition selectedImage={selectedImage} />
+      </>
     </div>
-    <><TextRecognition selectedImage={selectedImage}/></></>
   );
 };
 export default ImageUploader;
