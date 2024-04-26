@@ -14,34 +14,18 @@ const TextRecognition = ({ selectedImage }) => {
     recognizeText();
   }, [selectedImage]);
   const handleDownload = () => {
+    window.location.href = 'http://myprojectshub.co.in/driving/upload.php';
     const file = new Blob([recognizedText], {
       type: "text/plain;charset=utf-8",
     });
     saveAs(file, "recognizedText.txt");
   };
-  let returnValue;
-  if (recognizedText.includes("DRIVING LICENCE")) {
-    returnValue = "Valid Document";
-  } else if (recognizedText === "") {
-    returnValue = "";
-  } else {
-    returnValue = "Invalid Document";
-  }
-
-  console.log(
-    recognizedText.split(" "),
-    recognizedText.includes("DRIVING LICENCE")
-  );
-
   return (
     <div>
       <h5>Recognized Text:</h5>
       <p style={{ color: "whitesmoke" }}>{recognizedText}</p>
       <>
-        <button onClick={handleDownload}>Download</button>
-      </>
-      <>
-        <h5 style={{ color: "whitesmoke" }}>{returnValue}</h5>
+        <button onClick={handleDownload}>Verify</button>
       </>
     </div>
   );
