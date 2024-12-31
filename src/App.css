@@ -1,9 +1,205 @@
-body{
-background-image: url('file:///C:/Users/ADMIN/Downloads/DALL%C2%B7E%202024-10-19%2018.45.27%20-%20A%20clean%20and%20futuristic%20background%20for%20an%20image-to-text%20converter%20project.%20This%20design%20should%20evoke%20the%20process%20of%20image%20data%20transforming%20into%20text,%20w.webp');
-background-repeat: no-repeat;
-background-size: cover;}
+/* App.css */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-.grid-item {
+body {
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
   padding: 20px;
+  animation: backgroundFade 3s ease-in-out infinite alternate;
+}
+
+.container {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
   text-align: center;
+  animation: slideIn 1s ease-out;
+}
+
+.title {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 20px;
+  animation: fadeInFromTop 1.5s ease-out;
+}
+
+.upload-section input[type="file"] {
+  margin: 20px 0;
+  font-size: 1.1rem;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  transition: all 0.3s ease;
+  animation: bounceIn 1s ease-out;
+}
+
+.upload-section input[type="file"]:hover {
+  border-color: #2575fc;
+}
+
+.language-selector select {
+  padding: 10px;
+  font-size: 1rem;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  width: 100%;
+  transition: all 0.3s ease;
+  animation: fadeInFromLeft 1s ease-out;
+}
+
+.language-selector select:focus {
+  outline: none;
+  border-color: #2575fc;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  width: 48%;
+  margin: 5px 0;
+  animation: fadeInFromBottom 1s ease-out;
+}
+
+.btn:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+.btn:hover:not(:disabled) {
+  background-color: #45a049;
+  transform: translateY(-5px);
+}
+
+.extracted-text {
+  font-size: 1.2rem;
+  color: #333;
+  margin-top: 20px;
+  text-align: left;
+  line-height: 1.5;
+  white-space: pre-wrap; /* This ensures the text is displayed with line breaks */
+  word-wrap: break-word; /* This ensures that long words break properly */
+  max-height: 300px; /* Limit the height for large text */
+  overflow-y: auto; /* Make the text area scrollable */
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  opacity: 0;
+  animation: fadeInText 2s ease-out forwards;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 30px;
+  }
+
+  .btn {
+    width: 100%;
+    margin: 10px 0;
+  }
+
+  .language-selector select {
+    width: 100%;
+  }
+}
+
+@keyframes backgroundFade {
+  0% {
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  }
+  100% {
+    background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInFromTop {
+  0% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInFromLeft {
+  0% {
+    transform: translateX(-50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInFromBottom {
+  0% {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeInText {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
