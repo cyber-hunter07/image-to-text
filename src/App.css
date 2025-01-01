@@ -1,205 +1,164 @@
 /* App.css */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 
 body {
-  font-family: 'Arial', sans-serif;
-  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(to bottom right, #4a90e2, #9013fe);
+  color: #fff;
+  min-height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 100vh;
-  padding: 20px;
-  animation: backgroundFade 3s ease-in-out infinite alternate;
+  justify-content: center;
 }
 
 .container {
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
   border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  width: 100%;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  padding: 30px;
   max-width: 600px;
+  width: 90%;
   text-align: center;
-  animation: slideIn 1s ease-out;
+  animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .title {
-  font-size: 2.5rem;
-  color: #333;
+  font-size: 2rem;
   margin-bottom: 20px;
-  animation: fadeInFromTop 1.5s ease-out;
+  font-weight: 600;
 }
 
-.upload-section input[type="file"] {
+.upload-section {
   margin: 20px 0;
-  font-size: 1.1rem;
+}
+
+.upload-section input {
   padding: 10px;
   border-radius: 5px;
-  border: 1px solid #ddd;
-  transition: all 0.3s ease;
-  animation: bounceIn 1s ease-out;
+  border: none;
+  background: #fff;
+  color: #333;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-top: 10px;
 }
 
-.upload-section input[type="file"]:hover {
-  border-color: #2575fc;
+.language-selector {
+  margin: 20px 0;
+}
+
+.language-selector label {
+  font-weight: 500;
+  font-size: 1rem;
 }
 
 .language-selector select {
-  padding: 10px;
-  font-size: 1rem;
-  margin-bottom: 20px;
+  margin-top: 10px;
+  padding: 8px;
   border-radius: 5px;
-  border: 1px solid #ddd;
-  width: 100%;
-  transition: all 0.3s ease;
-  animation: fadeInFromLeft 1s ease-out;
-}
-
-.language-selector select:focus {
-  outline: none;
-  border-color: #2575fc;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
 }
 
 .button-group {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
   flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin: 20px 0;
 }
 
 .btn {
-  background-color: #4CAF50;
-  color: white;
-  padding: 12px 24px;
+  padding: 10px 20px;
+  font-size: 1rem;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  width: 48%;
-  margin: 5px 0;
-  animation: fadeInFromBottom 1s ease-out;
+  font-weight: 500;
+  transition: transform 0.2s ease-in-out, background-color 0.3s;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
 }
 
 .btn:disabled {
-  background-color: #ddd;
   cursor: not-allowed;
+  opacity: 0.6;
 }
 
-.btn:hover:not(:disabled) {
-  background-color: #45a049;
-  transform: translateY(-5px);
+.btn:nth-child(1) {
+  background: #28a745;
+  color: #fff;
 }
 
-.extracted-text {
-  font-size: 1.2rem;
+.btn:nth-child(2) {
+  background: #ffc107;
   color: #333;
+}
+
+.btn:nth-child(3) {
+  background: #17a2b8;
+  color: #fff;
+}
+
+.stop-btn {
+  background: #dc3545;
+  color: #fff;
+}
+
+.extracted-text,
+.translated-text {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 15px;
   margin-top: 20px;
   text-align: left;
-  line-height: 1.5;
-  white-space: pre-wrap; /* This ensures the text is displayed with line breaks */
-  word-wrap: break-word; /* This ensures that long words break properly */
-  max-height: 300px; /* Limit the height for large text */
-  overflow-y: auto; /* Make the text area scrollable */
-  padding: 10px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  opacity: 0;
-  animation: fadeInText 2s ease-out forwards;
-}
-
-@media (max-width: 768px) {
-  .container {
-    padding: 30px;
-  }
-
-  .btn {
-    width: 100%;
-    margin: 10px 0;
-  }
-
-  .language-selector select {
-    width: 100%;
-  }
-}
-
-@keyframes backgroundFade {
-  0% {
-    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-  }
-  100% {
-    background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
-  }
+  animation: slideIn 0.5s ease-in-out;
 }
 
 @keyframes slideIn {
-  0% {
-    transform: translateY(-50px);
+  from {
     opacity: 0;
+    transform: translateY(20px);
   }
-  100% {
+  to {
+    opacity: 1;
     transform: translateY(0);
-    opacity: 1;
   }
 }
 
-@keyframes fadeInFromTop {
-  0% {
-    transform: translateY(-50px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
+.extracted-text p,
+.translated-text p {
+  margin: 5px 0;
+  line-height: 1.5;
+  word-wrap: break-word;
 }
 
-@keyframes fadeInFromLeft {
-  0% {
-    transform: translateX(-50px);
-    opacity: 0;
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.5rem;
   }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
 
-@keyframes fadeInFromBottom {
-  0% {
-    transform: translateY(50px);
-    opacity: 0;
+  .btn {
+    font-size: 0.9rem;
+    padding: 8px 15px;
   }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
 
-@keyframes bounceIn {
-  0% {
-    transform: scale(0);
-    opacity: 0;
-  }
-  60% {
-    transform: scale(1.1);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes fadeInText {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
+  .upload-section input {
+    font-size: 0.8rem;
   }
 }
