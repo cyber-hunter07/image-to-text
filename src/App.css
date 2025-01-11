@@ -1,164 +1,143 @@
-/* App.css */
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
-  background: linear-gradient(to bottom right, #4a90e2, #9013fe);
-  color: #fff;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
 }
 
 .container {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
-  padding: 30px;
-  max-width: 600px;
   width: 90%;
-  text-align: center;
-  animation: fadeIn 1s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  max-width: 1000px;
+  margin: 40px auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .title {
-  font-size: 2rem;
+  font-size: 2.5rem;
+  color: #3e3e3e;
+  text-align: center;
   margin-bottom: 20px;
-  font-weight: 600;
 }
 
-.upload-section {
-  margin: 20px 0;
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
 }
 
-.upload-section input {
-  padding: 10px;
-  border-radius: 5px;
+.controls .btn {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
   border: none;
-  background: #fff;
-  color: #333;
-  font-size: 0.9rem;
+  border-radius: 6px;
   cursor: pointer;
-  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.controls .btn:hover {
+  background-color: #45a049;
 }
 
 .language-selector {
-  margin: 20px 0;
-}
-
-.language-selector label {
-  font-weight: 500;
-  font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
 }
 
 .language-selector select {
-  margin-top: 10px;
-  padding: 8px;
-  border-radius: 5px;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+  width: 150px;
 }
 
-.button-group {
+.language-selector button {
+  background-color: #2196f3;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.language-selector button:hover {
+  background-color: #1e88e5;
+}
+
+.video-feed {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+canvas {
+  display: none;
+}
+
+.output {
+  margin-top: 20px;
+}
+
+.output strong {
+  display: block;
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.output p {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.speech-controls {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
   gap: 15px;
-  margin: 20px 0;
-}
-
-.btn {
-  padding: 10px 20px;
-  font-size: 1rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: transform 0.2s ease-in-out, background-color 0.3s;
-}
-
-.btn:hover {
-  transform: translateY(-3px);
-}
-
-.btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.btn:nth-child(1) {
-  background: #28a745;
-  color: #fff;
-}
-
-.btn:nth-child(2) {
-  background: #ffc107;
-  color: #333;
-}
-
-.btn:nth-child(3) {
-  background: #17a2b8;
-  color: #fff;
-}
-
-.stop-btn {
-  background: #dc3545;
-  color: #fff;
-}
-
-.extracted-text,
-.translated-text {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 10px;
-  padding: 15px;
   margin-top: 20px;
-  text-align: left;
-  animation: slideIn 0.5s ease-in-out;
 }
 
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+.speech-controls .btn {
+  background-color: #ff5722;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.speech-controls .btn:hover {
+  background-color: #e64a19;
+}
+
+@media (max-width: 768px) {
+  .controls, .language-selector, .speech-controls {
+    flex-direction: column;
+    align-items: center;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  
+  .controls .btn, .language-selector button, .speech-controls .btn {
+    width: 100%;
+    margin-bottom: 10px;
   }
 }
 
-.extracted-text p,
-.translated-text p {
-  margin: 5px 0;
-  line-height: 1.5;
-  word-wrap: break-word;
-}
-
-@media (max-width: 480px) {
-  .title {
-    font-size: 1.5rem;
-  }
-
-  .btn {
-    font-size: 0.9rem;
-    padding: 8px 15px;
-  }
-
-  .upload-section input {
-    font-size: 0.8rem;
-  }
-}
