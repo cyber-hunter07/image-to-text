@@ -1,197 +1,233 @@
 import React, { useState, useRef } from 'react';
-import axios from 'axios';
 import './App.css';
 
 function App() {
   const [image, setImage] = useState(null);
   const [text, setText] = useState('');
-  const [translatedText, setTranslatedText] = useState('');
+  const [canvasVisble,setCanvasVisble]=useState()
   const [language, setLanguage] = useState('en');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isLoading, setIsLoading] = useState();
+  const [videoStream, setVideoStream] = useState(null);
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const [translatedText, setTranslatedText] = useState('');
+  const [speechAudio, setSpeechAudio] = useState(null); // To hold the audio object
+  const [isPlaying, setIsPlaying] = useState(false); // To track whether the audio is playing
 
-  const audioRef = useRef(null);
+  const GOOGLE_API_KEY = 'AIzaSyBxP2v3dX3wPY2QjYCNKYj_4wJ5Uw4YIOc';
+  const TRANSLATE_API_KEY = 'AIzaSyBxP2v3dX3wPY2QjYCNKYj_4wJ5Uw4YIOc';
+  const TEXT_TO_SPEECH_API_KEY = 'AIzaSyBxP2v3dX3wPY2QjYCNKYj_4wJ5Uw4YIOc';
+  // Start Camera
+  const startCamera = async () => {
+    setCanvasVisble(true)
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      setVideoStream(stream);
+     
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+    } catch (error) {
+      alert('Unable to access the camera. Please ensure permissions are granted.');
+      console.error('Camera access error:', error);
+    }
+  };
 
-  // Handle Image Upload
+  // Stop Camera
+  const stopCamera = () => {
+    if (videoStream) {
+      videoStream.getTracks().forEach((track) => track.stop());
+      setVideoStream(null);
+      setCanvasVisble(false)
+    }
+  };
+
+  // Capture Frame from Camera
+  const captureFrame = () => {
+    if (videoRef.current && canvasRef.current) {
+      const canvas = canvasRef.current;
+      const context = canvas.getContext('2d');
+      context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+      const dataUrl = canvas.toDataURL('image/png');
+      setImage(dataUrl);
+      extractText(dataUrl);
+    }
+  };
+
+  // Image Upload
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImage(reader.result);
+      extractText(reader.result);
+    };
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImage(reader.result); // Base64 encoded image
-      };
       reader.readAsDataURL(file);
     }
   };
 
-  // Extract Text using Google Vision API
-  const extractText = async () => {
-    if (!image) {
-      alert('Please upload an image first.');
-      return;
-    }
-
+  // Extract Text from Image
+  const extractText = async (imageSrc) => {
     setIsLoading(true);
-    setText('');
-    setTranslatedText('');
-
     try {
-      const response = await axios.post(
-        `https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBxP2v3dX3wPY2QjYCNKYj_4wJ5Uw4YIOc`,
+      const response = await fetch(
+        `https://vision.googleapis.com/v1/images:annotate?key=${GOOGLE_API_KEY}`,
         {
-          requests: [
-            {
-              image: { content: image.split(',')[1] },
-              features: [{ type: 'TEXT_DETECTION' }],
-            },
-          ],
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            requests: [
+              {
+                image: { content: imageSrc.split(',')[1] },
+                features: [{ type: 'TEXT_DETECTION' }],
+              },
+            ],
+          }),
         }
       );
 
-      const detectedText = response.data.responses[0]?.fullTextAnnotation?.text || '';
+      const data = await response.json();
+      const detectedText = data.responses[0]?.fullTextAnnotation?.text || '';
       setText(detectedText);
-
+      setIsLoading(false);
       if (detectedText.trim()) {
         translateText(detectedText);
-      } else {
-        console.warn('No valid text extracted.');
       }
     } catch (error) {
-      console.error('Error with Vision API:', error.response?.data?.error?.message || error);
-      alert('Failed to extract text. Check console for details.');
-    } finally {
       setIsLoading(false);
+      console.error('Error extracting text:', error);
     }
   };
 
   // Translate Text using Google Translate API
   const translateText = async (text) => {
     try {
-      if (language === 'en') {
-        setTranslatedText(text);
-        textToSpeech(text);
-        return;
-      }
-
-      const response = await axios.post(
-        `https://translation.googleapis.com/language/translate/v2?key=AIzaSyBxP2v3dX3wPY2QjYCNKYj_4wJ5Uw4YIOc`,
+      const response = await fetch(
+        `https://translation.googleapis.com/language/translate/v2?key=${TRANSLATE_API_KEY}`,
         {
-          q: text,
-          target: language,
-          source: 'en',
-        }
-      );
-
-      const translated = response.data.data.translations[0].translatedText;
-      setTranslatedText(translated);
-      textToSpeech(translated);
-    } catch (error) {
-      console.error('Error with Translate API:', error.response?.data?.error?.message || error);
-      alert('Failed to translate text. Check console for details.');
-    }
-  };
-
-  // Text-to-Speech using Google Text-to-Speech API
-  const textToSpeech = async (text) => {
-    try {
-      const response = await axios.post(
-        `https://texttospeech.googleapis.com/v1/text:synthesize?key=AIzaSyBxP2v3dX3wPY2QjYCNKYj_4wJ5Uw4YIOc`,
-        {
-          input: { text },
-          voice: {
-            languageCode: language === 'ta' ? 'ta-IN' : language === 'hi' ? 'hi-IN' : 'en-US',
-            ssmlGender: 'NEUTRAL',
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
           },
-          audioConfig: { audioEncoding: 'MP3' },
+          body: JSON.stringify({
+            q: text,
+            target: language,
+          }),
         }
       );
 
-      const audioContent = response.data.audioContent;
-      if (audioContent) {
-        const audioUrl = `data:audio/mp3;base64,${audioContent}`;
-        if (audioRef.current) {
-          audioRef.current.pause();
-          audioRef.current.currentTime = 0;
-        }
-        audioRef.current = new Audio(audioUrl);
-        audioRef.current.play();
-        setIsSpeaking(true);
+      const data = await response.json();
+      const translated = data.data.translations[0].translatedText || '';
+      setTranslatedText(translated);
+      readTextAloud(translated);
+    } catch (error) {
+      console.error('Error in translation:', error);
+    }
+  };
 
-        audioRef.current.onended = () => {
-          setIsSpeaking(false);
-        };
+  // Read Translated Text using Google Text-to-Speech API
+  const readTextAloud = async (text) => {
+    try {
+      const response = await fetch(
+        `https://texttospeech.googleapis.com/v1/text:synthesize?key=${TEXT_TO_SPEECH_API_KEY}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            input: { text },
+            voice: { languageCode: language, ssmlGender: 'NEUTRAL' },
+            audioConfig: { audioEncoding: 'MP3' },
+          }),
+        }
+      );
+
+      const data = await response.json();
+      if (data.audioContent) {
+        const audio = new Audio(`data:audio/mp3;base64,${data.audioContent}`);
+        setSpeechAudio(audio); // Store the audio object
+        audio.play();
+        setIsPlaying(true);
       }
     } catch (error) {
-      console.error('Error with Text-to-Speech API:', error.response?.data?.error?.message || error);
-      alert('Failed to generate audio. Check console for details.');
+      console.error('Error in text-to-speech:', error);
     }
   };
 
-  // Pause Audio
-  const pauseAudio = () => {
-    if (audioRef.current && !audioRef.current.paused) {
-      audioRef.current.pause();
-      setIsSpeaking(false);
+  // Handle Start Button for Speech
+  const handleStartSpeech = () => {
+    if (speechAudio && !isPlaying) {
+      speechAudio.play();
+      setIsPlaying(true);
     }
   };
 
-  // Resume Audio
-  const resumeAudio = () => {
-    if (audioRef.current && audioRef.current.paused) {
-      audioRef.current.play();
-      setIsSpeaking(true);
+  // Handle Stop Button for Speech
+  const handleStopSpeech = () => {
+    if (speechAudio && isPlaying) {
+      speechAudio.pause();
+      speechAudio.currentTime = 0; // Reset audio to start
+      setIsPlaying(false);
     }
   };
 
-  // Stop Audio
-  const stopAudio = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-      setIsSpeaking(false);
+  // Handle Resume Button for Speech
+  const handleResumeSpeech = () => {
+    if (speechAudio && !isPlaying) {
+      speechAudio.play();
+      setIsPlaying(true);
     }
   };
 
   return (
     <div className="container">
-      <h1 className="title">Google Vision & Text-to-Speech</h1>
-      <div className="upload-section">
+      <h1 className="title">Image to Text Reader & Translator</h1>
+
+      <div className="controls">
+        <button onClick={startCamera} className="btn">Start Camera</button>
+        <button onClick={stopCamera} className="btn">Stop Camera</button>
+        <button onClick={captureFrame} className="btn">Capture & Extract</button>
         <input type="file" accept="image/*" onChange={handleImageUpload} />
       </div>
+{canvasVisble?<div>
+      <video ref={videoRef} autoPlay className="video-feed"></video>
+      <canvas ref={canvasRef} width="640" height="480" style={{ display: 'none' }}></canvas></div>:null
+}
       <div className="language-selector">
-        <label>Select Language: </label>
         <select value={language} onChange={(e) => setLanguage(e.target.value)}>
           <option value="en">English</option>
           <option value="ta">Tamil</option>
           <option value="hi">Hindi</option>
         </select>
+        <button onClick={() => translateText(text)} className="btn">Translate</button>
       </div>
-      <div className="button-group">
-        <button className="btn" onClick={extractText} disabled={isLoading}>
-          {isLoading ? 'Extracting...' : 'Extract & Translate'}
-        </button>
-        <button className="btn" onClick={pauseAudio} disabled={!isSpeaking}>
-          Pause Audio
-        </button>
-        <button className="btn" onClick={resumeAudio} disabled={isSpeaking}>
-          Resume Audio
-        </button>
-        <button className="btn stop-btn" onClick={stopAudio} disabled={!isSpeaking}>
-          Stop Audio
-        </button>
-      </div>
+
+      {isLoading && <p>Loading...</p>}
+
       {text && (
-        <div className="extracted-text">
+        <div className="output">
           <strong>Extracted Text:</strong>
           <p>{text}</p>
         </div>
       )}
+
       {translatedText && (
-        <div className="translated-text">
+        <div className="output">
           <strong>Translated Text:</strong>
           <p>{translatedText}</p>
         </div>
       )}
+
+      {/* Speech Controls */}
+      <div className="speech-controls">
+        <button onClick={handleStartSpeech} className="btn" disabled={isPlaying}>Start Speech</button>
+        <button onClick={handleStopSpeech} className="btn" disabled={!isPlaying}>Stop Speech</button>
+        <button onClick={handleResumeSpeech} className="btn" disabled={isPlaying}>Resume Speech</button>
+      </div>
     </div>
   );
 }
