@@ -14,9 +14,9 @@ function App() {
   const [speechAudio, setSpeechAudio] = useState(null); // To hold the audio object
   const [isPlaying, setIsPlaying] = useState(false); // To track whether the audio is playing
 
-  const GOOGLE_API_KEY = 'AIzaSyBxP2v3dX3wPY2QjYCNKYj_4wJ5Uw4YIOc';
-  const TRANSLATE_API_KEY = 'AIzaSyBxP2v3dX3wPY2QjYCNKYj_4wJ5Uw4YIOc';
-  const TEXT_TO_SPEECH_API_KEY = 'AIzaSyBxP2v3dX3wPY2QjYCNKYj_4wJ5Uw4YIOc';
+  const GOOGLE_API_KEY = 'AIzaSyClIIuOPdNqkoVZwaSWv35SvIH26DW4l_k';
+  const TRANSLATE_API_KEY = 'AIzaSyClIIuOPdNqkoVZwaSWv35SvIH26DW4l_k';
+  const TEXT_TO_SPEECH_API_KEY = 'AIzaSyClIIuOPdNqkoVZwaSWv35SvIH26DW4l_k';
   // Start Camera
   const startCamera = async () => {
     setCanvasVisble(true)
